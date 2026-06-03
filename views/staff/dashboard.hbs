@@ -1,0 +1,42 @@
+{{#> layouts/main}}
+<div class="container" style="padding:2rem">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+    <h2>Staff Dashboard</h2>
+    <div style="display:flex;gap:1rem">
+      <a href="/staff/products/new" class="btn-primary">+ Add Product</a>
+      <a href="/staff/orders/new" class="btn-secondary">+ Order for Customer</a>
+    </div>
+  </div>
+
+  {{#if (eq this.query.success 'created')  }}<p class="alert-success">Product created!</p>{{/if}}
+  {{#if (eq this.query.success 'updated')  }}<p class="alert-success">Product updated!</p>{{/if}}
+  {{#if (eq this.query.success 'deleted')  }}<p class="alert-success">Product deleted!</p>{{/if}}
+  {{#if (eq this.query.success 'order-created')}}<p class="alert-success">Order created!</p>{{/if}}
+
+  <table class="staff-table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Category</th><th>Type</th><th>Price</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+      <tr>
+        <td>{{id}}</td>
+        <td>{{name}}</td>
+        <td>{{category}}</td>
+        <td>{{type}}</td>
+        <td>{{currency price}}</td>
+        <td>
+          <a href="/staff/products/{{id}}/edit">Edit</a>
+          <form method="POST" action="/staff/products/{{id}}/delete" style="display:inline"
+            onsubmit="return confirm('Delete this product?')">
+            <button type="submit" class="btn-danger-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+{{/layouts/main}}

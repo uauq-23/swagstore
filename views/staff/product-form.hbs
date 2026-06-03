@@ -1,0 +1,52 @@
+{{#> layouts/main}}
+<div class="container" style="padding:2rem;max-width:600px">
+  <h2>{{#if editMode}}Edit{{else}}Add{{/if}} Product</h2>
+
+  {{#if error}}<p class="alert-error">{{error}}</p>{{/if}}
+
+  <form method="POST" action="{{#if editMode}}/staff/products/{{product.id}}{{else}}/staff/products{{/if}}">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" name="name" value="{{#if product}}{{product.name}}{{/if}}" required>
+    </div>
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" name="price" step="0.01" value="{{#if product}}{{product.price}}{{/if}}" required>
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select name="category" required>
+        {{#each categories}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Type</label>
+      <select name="type" required>
+        {{#each types}}
+        <option value="{{this}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Image filename</label>
+      <input type="text" name="image" value="{{#if product}}{{product.image}}{{/if}}">
+    </div>
+    <div class="form-group">
+      <label>Badge</label>
+      <select name="badge">
+        <option value="">None</option>
+        <option value="Bestseller">Bestseller</option>
+        <option value="New">New</option>
+        <option value="Sale">Sale</option>
+        <option value="Limited">Limited</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button type="submit" class="btn-primary">{{#if editMode}}Update{{else}}Create{{/if}}</button>
+      <a href="/staff/dashboard">Cancel</a>
+    </div>
+  </form>
+</div>
+{{/layouts/main}}
