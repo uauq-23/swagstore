@@ -1,0 +1,47 @@
+{{#> layouts/main}}
+<div class="container" style="padding:2rem">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+    <h2>Order Management</h2>
+    <a href="/staff/dashboard" class="btn-ghost">← Dashboard</a>
+  </div>
+
+  {{#if successMsg}}<p class="alert-success">{{successMsg}}</p>{{/if}}
+
+  {{#if orders.length}}
+  <table class="staff-table">
+    <thead>
+      <tr>
+        <th>Order ID</th><th>Customer</th><th>Total</th><th>Placed At</th><th>Status</th><th>Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each orders}}
+      <tr>
+        <td style="font-size:.85rem">{{id}}</td>
+        <td>{{name}}<br><span style="font-size:.8rem;color:#6b7280">{{email}}</span></td>
+        <td>${{total}}</td>
+        <td style="font-size:.85rem">{{placedAt}}</td>
+        <td>
+          <span class="pill {{#if (eq status 'delivered')}}pill-active{{/if}}">{{status}}</span>
+        </td>
+        <td>
+          <form method="POST" action="/staff/orders/{{id}}/status" style="display:flex;gap:.4rem">
+            <select name="status" class="sort-select" style="font-size:.8rem;padding:.2rem .5rem">
+              {{#each ../statuses}}
+              <option value="{{this}}">{{this}}</option>
+              {{/each}}
+            </select>
+            <button type="submit" class="btn-add" style="font-size:.8rem;padding:.3rem .7rem">Save</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <div class="empty-state">
+    <p class="empty-title">No orders yet</p>
+  </div>
+  {{/if}}
+</div>
+{{/layouts/main}}

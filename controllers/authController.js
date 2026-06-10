@@ -103,5 +103,34 @@ exports.showProfile = (req, res) => {
   res.render('profile', {
     user:      req.session.user,
     cartCount: cart.count,
+    success:   req.query.success === '1',
   });
+};
+
+exports.updateProfile = (req, res) => {
+  const { name, address, password, confirmPassword } = req.body;
+  const cart = getCart(req);
+
+  if (!name || !address) {
+    return res.render('profile', {
+      user: req.session.user, cartCount: cart.count,
+      error: 'Name and address are required.',
+    });
+  }
+  if (password && password !== confirmPassword) {
+    return res.render('profile', {
+      user: req.session.user, cartCount: cart.count,
+      error: 'Passwords do not match.',
+    });
+  }
+
+  try {
+    const fields = { name: name.trim(), address: address.trim() };
+    if (password) fields.passwordHash = Account.hashPassword(password);
+    const updated = Account.update(req.session.user.id, fields);
+    req.session.user = { ...req.session.user, name: updated.name, address: updated.address };
+    res.redirect('/profile?success=1');
+  } catch (err) {
+    res.render('profile', { user: req.session.user, cartCount: cart.count, error: err.message });
+  }
 };

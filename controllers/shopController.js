@@ -13,15 +13,18 @@ function saveCart(req, cart) {
 
 // GET /
 exports.showShop = (req, res) => {
-  const { category, type, sort } = req.query;
+  const { category, type, sort, search, minPrice, maxPrice } = req.query;
   let products = Product.getAll();
 
-  if (category && category !== 'all') {
+  if (category && category !== 'all')
     products = products.filter(p => p.category === category);
-  }
-  if (type && type !== 'all') {
+  if (type && type !== 'all')
     products = products.filter(p => p.type === type);
-  }
+  if (search && search.trim())
+    products = products.filter(p => p.name.toLowerCase().includes(search.trim().toLowerCase()));
+  if (minPrice) products = products.filter(p => p.price >= Number(minPrice));
+  if (maxPrice) products = products.filter(p => p.price <= Number(maxPrice));
+
   if (sort === 'price-asc')  products.sort((a, b) => a.price - b.price);
   if (sort === 'price-desc') products.sort((a, b) => b.price - a.price);
   if (sort === 'name')       products.sort((a, b) => a.name.localeCompare(b.name));
@@ -29,11 +32,14 @@ exports.showShop = (req, res) => {
   const cart = getCart(req);
   res.render('shop', {
     products,
-    categories: Category.getAll(),
-    types:      Product.getTypes(),
+    categories:     Category.getAll(),
+    types:          Product.getTypes(),
     activeCategory: category || 'all',
     activeType:     type     || 'all',
     activeSort:     sort     || 'default',
+    activeSearch:   search   || '',
+    activeMinPrice: minPrice || '',
+    activeMaxPrice: maxPrice || '',
     cartCount:      cart.count,
   });
 };

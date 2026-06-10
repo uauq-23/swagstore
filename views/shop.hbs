@@ -5,21 +5,33 @@
 </div>
 
 <div class="shop-controls">
+  {{!-- Search & Price Range --}}
+  <form method="GET" action="/" class="search-bar" style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem">
+    <input type="text" name="search" value="{{activeSearch}}" placeholder="Search products..." class="sort-select" style="flex:1;min-width:160px">
+    <input type="number" name="minPrice" value="{{activeMinPrice}}" placeholder="Min $" class="sort-select" style="width:90px" min="0" step="0.01">
+    <input type="number" name="maxPrice" value="{{activeMaxPrice}}" placeholder="Max $" class="sort-select" style="width:90px" min="0" step="0.01">
+    <input type="hidden" name="category" value="{{activeCategory}}">
+    <input type="hidden" name="type" value="{{activeType}}">
+    <input type="hidden" name="sort" value="{{activeSort}}">
+    <button type="submit" class="btn-add">Search</button>
+    {{#if activeSearch}}<a href="/" style="font-size:.85rem">✕ Clear</a>{{/if}}
+  </form>
+
   <div class="filter-pills">
-    <a href="/?type={{activeType}}&sort={{activeSort}}" class="pill {{#if (eq activeCategory 'all')}}pill-active{{/if}}">All</a>
+    <a href="/?type={{activeType}}&sort={{activeSort}}&search={{activeSearch}}" class="pill {{#if (eq activeCategory 'all')}}pill-active{{/if}}">All</a>
     {{#each categories}}
-    <a href="/?category={{this}}&type={{../activeType}}&sort={{../activeSort}}" class="pill {{#if (eq this ../activeCategory)}}pill-active{{/if}}">{{this}}</a>
+    <a href="/?category={{this}}&type={{../activeType}}&sort={{../activeSort}}&search={{../activeSearch}}" class="pill {{#if (eq this ../activeCategory)}}pill-active{{/if}}">{{this}}</a>
     {{/each}}
   </div>
   <div class="filter-pills">
-    <a href="/?category={{activeCategory}}&sort={{activeSort}}" class="pill {{#if (eq activeType 'all')}}pill-active{{/if}}">All Types</a>
+    <a href="/?category={{activeCategory}}&sort={{activeSort}}&search={{activeSearch}}" class="pill {{#if (eq activeType 'all')}}pill-active{{/if}}">All Types</a>
     {{#each types}}
-    <a href="/?category={{../activeCategory}}&type={{this}}&sort={{../activeSort}}" class="pill {{#if (eq this ../activeType)}}pill-active{{/if}}">{{this}}</a>
+    <a href="/?category={{../activeCategory}}&type={{this}}&sort={{../activeSort}}&search={{../activeSearch}}" class="pill {{#if (eq this ../activeType)}}pill-active{{/if}}">{{this}}</a>
     {{/each}}
   </div>
   <div class="sort-wrap">
     <label class="sort-label">Sort</label>
-    <select class="sort-select" onchange="location='/?category={{activeCategory}}&type={{activeType}}&sort='+this.value">
+    <select class="sort-select" onchange="location='/?category={{activeCategory}}&type={{activeType}}&search={{activeSearch}}&sort='+this.value">
       <option value="default"    {{#if (eq activeSort 'default')   }}selected{{/if}}>Featured</option>
       <option value="name"       {{#if (eq activeSort 'name')      }}selected{{/if}}>A → Z</option>
       <option value="price-asc"  {{#if (eq activeSort 'price-asc') }}selected{{/if}}>Price ↑</option>
@@ -27,6 +39,10 @@
     </select>
   </div>
 </div>
+
+{{#if activeSearch}}
+<p style="padding:.5rem 1.5rem;color:#6b7280">{{products.length}} result(s) for "{{activeSearch}}"</p>
+{{/if}}
 
 <div class="product-grid">
   {{#each products}}
@@ -49,5 +65,11 @@
         </form>
       </div>
   </article>
+  {{else}}
+  <div style="grid-column:1/-1;text-align:center;padding:3rem;color:#6b7280">
+    <p style="font-size:2rem">🔍</p>
+    <p>No products found.</p>
+    <a href="/">Clear filters</a>
+  </div>
   {{/each}}
 </div>

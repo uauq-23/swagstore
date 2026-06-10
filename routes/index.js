@@ -25,8 +25,10 @@ router.post('/staff/products',           authCtrl.requireStaff, staffCtrl.create
 router.get ('/staff/products/:id/edit',  authCtrl.requireStaff, staffCtrl.showProductForm);
 router.post('/staff/products/:id',       authCtrl.requireStaff, staffCtrl.updateProduct);
 router.post('/staff/products/:id/delete',authCtrl.requireStaff, staffCtrl.deleteProduct);
-router.get ('/staff/orders/new',         authCtrl.requireStaff, staffCtrl.showCustomerOrderForm);
-router.post('/staff/orders',             authCtrl.requireStaff, staffCtrl.createCustomerOrder);
+router.get ('/staff/orders/new',          authCtrl.requireStaff, staffCtrl.showCustomerOrderForm);
+router.post('/staff/orders',              authCtrl.requireStaff, staffCtrl.createCustomerOrder);
+router.get ('/staff/orders',              authCtrl.requireStaff, staffCtrl.showAllOrders);
+router.post('/staff/orders/:id/status',   authCtrl.requireStaff, staffCtrl.updateOrderStatus);
 
 // ── Auth ──────────────────────────────────────────────────────
 router.get ('/login',    authCtrl.showLogin);
@@ -35,5 +37,6 @@ router.get ('/logout',   authCtrl.logout);
 router.get ('/register', authCtrl.showRegister);
 router.post('/register', authCtrl.register);
 router.get ('/profile',  authCtrl.requireLogin, authCtrl.showProfile);
+router.post('/profile',  authCtrl.requireLogin, authCtrl.updateProfile);
 
 module.exports = router;

@@ -85,7 +85,7 @@ exports.createCustomerOrder = (req, res) => {
   const { customerId, productId, quantity } = req.body;
   const customer = Account.findById(customerId);
   const product = Product.getById(productId);
-  
+
   if (!customer || !product) {
     return res.render('staff/customer-order', {
       error: 'Invalid customer or product',
@@ -120,4 +120,30 @@ exports.createCustomerOrder = (req, res) => {
 
   Order.add(order);
   res.redirect('/staff/dashboard?success=order-created');
+};
+
+// ── Order Management ──────────────────────────────────────────
+const VALID_STATUSES = ['pending', 'processing', 'shipped', 'delivered'];
+
+exports.showAllOrders = (req, res) => {
+  const orders = Order.getAll().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  res.render('staff/orders', {
+    orders,
+    cartCount: getCart(req).count,
+    statuses: VALID_STATUSES,
+    successMsg: req.query.success ? 'Order status updated.' : null,
+  });
+};
+
+exports.updateOrderStatus = (req, res) => {
+  const { status } = req.body;
+  if (!VALID_STATUSES.includes(status)) {
+    return res.redirect('/staff/orders?error=invalid-status');
+  }
+  try {
+    Order.updateStatus(req.params.id, status);
+    res.redirect('/staff/orders?success=1');
+  } catch (err) {
+    res.redirect('/staff/orders?error=' + encodeURIComponent(err.message));
+  }
 };
