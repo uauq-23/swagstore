@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Staff Admin",
+    "email": "staff@swagstore.com",
+    "address": "123 SwagStore HQ",
+    "passwordHash": "$2a$10$KRoUg0COVnS9S10CCaTSre2x9.Io4BjO.AhRs.3VID1muiJdGSuYu",
+    "role": "staff",
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  }
+]
